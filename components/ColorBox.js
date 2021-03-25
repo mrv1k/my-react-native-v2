@@ -3,14 +3,16 @@ import {View, Text, StyleSheet} from 'react-native';
 
 const ColorBox = ({colorName, hexCode}) => {
   const background = {backgroundColor: hexCode};
-  let textColor = {color: 'white'};
-  if (colorName === 'Base2' || colorName === 'Base3') {
-    textColor.color = 'black';
-  }
+  let textStyle = {
+    color:
+      parseInt(hexCode.replace('#', ''), 16) > 0xffffff / 1.1
+        ? 'black'
+        : 'white',
+  };
 
   return (
     <View style={[styles.box, background]}>
-      <Text style={[styles.text, textColor]}>{colorName}</Text>
+      <Text style={[styles.text, textStyle]}>{colorName}</Text>
     </View>
   );
 };
