@@ -1,43 +1,26 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {Text, TouchableOpacity, FlatList} from 'react-native';
 
-const Home = ({navigation}) => (
-  <View>
+const Home = ({navigation}) => {
+  const renderItem = ({item}) => (
     <TouchableOpacity>
       <Text
         onPress={() => {
-          navigation.navigate('ColorPalette', {
-            paletteName: 'Solarized',
-            colors: SOLARIZED,
-          });
+          navigation.navigate('ColorPalette', item);
         }}>
-        Solarized
+        {item.paletteName}
       </Text>
     </TouchableOpacity>
-    <TouchableOpacity>
-      <Text
-        onPress={() => {
-          navigation.navigate('ColorPalette', {
-            paletteName: 'Rainbow',
-            colors: RAINBOW,
-          });
-        }}>
-        Rainbow
-      </Text>
-    </TouchableOpacity>
-    <TouchableOpacity>
-      <Text
-        onPress={() => {
-          navigation.navigate('ColorPalette', {
-            paletteName: 'Frontend Master',
-            colors: FRONTEND_MASTERS,
-          });
-        }}>
-        Frontend Masters
-      </Text>
-    </TouchableOpacity>
-  </View>
-);
+  );
+
+  return (
+    <FlatList
+      data={COLOR_PALETS}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.paletteName}
+    />
+  );
+};
 
 const SOLARIZED = [
   {colorName: 'Base03', hexCode: '#002b36'},
@@ -72,6 +55,12 @@ const FRONTEND_MASTERS = [
   {colorName: 'Grey', hexCode: '#8a8a8a'},
   {colorName: 'White', hexCode: '#ffffff'},
   {colorName: 'Orange', hexCode: '#e66225'},
+];
+
+const COLOR_PALETS = [
+  {paletteName: 'Solarized', colors: SOLARIZED},
+  {paletteName: 'Rainbow', colors: RAINBOW},
+  {paletteName: 'Frontend Masters', colors: FRONTEND_MASTERS},
 ];
 
 export default Home;
