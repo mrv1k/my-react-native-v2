@@ -4,6 +4,13 @@ import PalettePreview from '../components/PalettePreview';
 
 const Home = ({navigation}) => {
   const [colorPalets, setColorPalets] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchColorPallets();
+    setIsRefreshing(false);
+  };
 
   // https://color-palette-api.kadikraman.now.sh/palettes
   useEffect(() => {
@@ -30,6 +37,8 @@ const Home = ({navigation}) => {
       renderItem={renderItem}
       keyExtractor={(item) => item.paletteName}
       style={styles.list}
+      refreshing={isRefreshing}
+      onRefresh={handleRefresh}
     />
   );
 };
