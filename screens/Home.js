@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, StyleSheet} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import PalettePreview from '../components/PalettePreview';
 
 const Home = ({navigation}) => {
@@ -39,14 +39,32 @@ const Home = ({navigation}) => {
       style={styles.list}
       refreshing={isRefreshing}
       onRefresh={handleRefresh}
+      ListHeaderComponent={
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('AddNewPalette')}>
+          <Text style={styles.buttonText}>modal</Text>
+        </TouchableOpacity>
+      }
     />
   );
 };
 
 const styles = StyleSheet.create({
   list: {
+    flex: 1,
     padding: 10,
     backgroundColor: 'white',
+  },
+  button: {
+    height: 50,
+    backgroundColor: 'white',
+    padding: 10,
+  },
+  buttonText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'teal',
   },
 });
 
