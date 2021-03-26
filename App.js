@@ -23,12 +23,12 @@ const App = () => {
   return (
     <NavigationContainer>
       <RootStack.Navigator mode="modal">
+        <RootStack.Screen name="AddNewPalette" component={AddNewPaletteModal} />
         <RootStack.Screen
           name="Main"
           component={MainStackScreen}
           options={{headerShown: false}}
         />
-        <RootStack.Screen name="AddNewPalette" component={AddNewPaletteModal} />
       </RootStack.Navigator>
     </NavigationContainer>
   );
