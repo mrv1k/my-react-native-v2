@@ -1,18 +1,13 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Switch, Text, View} from 'react-native';
-
-const ItemSeparatorComponent = () => <View style={styles.cellSeparator} />;
 
 const ColorSwitch = ({color, parentCallback}) => {
   const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => {
-    console.log('a', isEnabled);
-    setIsEnabled((previousState) => {
-      const state = !previousState;
-      parentCallback(state, color);
-      return state;
-    });
-  };
+  const toggleSwitch = () => setIsEnabled((state) => !state);
+
+  useEffect(() => {
+    parentCallback(isEnabled, color);
+  }, [isEnabled, color, parentCallback]);
 
   return (
     <Switch
@@ -37,38 +32,47 @@ const AddNewPaletteModal = () => {
   const deselectColor = (deselectedColor) => {
     setSelectedColors((colors) => {
       console.log('deselect', colors);
-      const updatedState = colors.filter(
-        (color) => color.hexCode !== deselectedColor.hexCode,
-      );
+      const updatedState = colors.filter((color) => {
+        console.log(deselectedColor, color, color !== deselectedColor);
+        return color !== deselectedColor;
+      });
       console.log(colors);
       return updatedState;
     });
   };
 
   const parentCallback = (switchIsEnabled, color) => {
-    console.log('parentCallback', switchIsEnabled, color);
-    switchIsEnabled ? selectColor(color) : deselectColor(color);
+    console.log('parentCallback', switchIsEnabled);
+    if (switchIsEnabled) {
+      selectColor(color);
+    } else {
+      deselectColor(color);
+    }
   };
+
+  const wrappedParentCallback = useCallback(parentCallback, []);
 
   const renderItem = ({item}) => {
     return (
       <View style={styles.cell}>
         <Text style={styles.cellText}>{item.colorName}</Text>
-        <ColorSwitch color={item} parentCallback={parentCallback} />
+        <ColorSwitch color={item} parentCallback={wrappedParentCallback} />
       </View>
     );
   };
 
   return (
     <View style={styles.global}>
-      <Text>
-        selectedColors: {selectedColors.map((color) => color.colorName + ' ')}
-      </Text>
+      <FlatList
+        data={selectedColors}
+        renderItem={({item}) => <Text>{item.colorName}</Text>}
+        keyExtractor={(item) => item.hexCode}
+      />
       <FlatList
         data={COLORS}
         renderItem={renderItem}
         keyExtractor={(item) => item.colorName}
-        ItemSeparatorComponent={ItemSeparatorComponent}
+        ItemSeparatorComponent={() => <View style={styles.cellSeparator} />}
       />
     </View>
   );
