@@ -7,7 +7,7 @@ const ColorSwitch = ({color, updateSelectedColors}) => {
 
   useEffect(() => {
     updateSelectedColors(isEnabled, color);
-  }, [isEnabled, color, updateSelectedColors]);
+  }, [isEnabled, updateSelectedColors, color]);
 
   return (
     <Switch
@@ -23,12 +23,13 @@ const AddNewPaletteModal = () => {
 
   const updateSelectedColors = useCallback((switchIsEnabled, color) => {
     setSelectedColors((oldState) => {
-      const state = oldState.slice();
+      let state = oldState.slice();
       if (switchIsEnabled) {
         state.push(color);
       } else {
-        state.filter((aColor) => aColor.hexCode !== color.hexCode);
+        state = state.filter((aColor) => aColor.hexCode !== color.hexCode);
       }
+      return state;
     });
   }, []);
 
@@ -57,8 +58,6 @@ const AddNewPaletteModal = () => {
     </View>
   );
 };
-// TODO: sticky header name field
-// TODO: sticky footer: Submit button
 
 const styles = StyleSheet.create({
   global: {paddingHorizontal: 10, backgroundColor: '#fff'},
@@ -87,3 +86,12 @@ const COLORS = [
 ];
 
 export default AddNewPaletteModal;
+
+// Requirements
+// [x] pressing on "add color scheme" opens a modal
+// [] the user can enter the name for the color scheme
+// [x] the user can use toggle buttons to select colors to add to the scheme
+// [] if the user hits submit without entering a name for the color, they will get an error message
+// [] if the user hits submit without entering the number of colors, they will get an error message
+// [] if the user has entered a name for the color scheme and picked at least 3 colors,
+// ^ the modal will close and the color scheme they created gets added to the top of the list
