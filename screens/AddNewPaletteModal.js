@@ -22,15 +22,11 @@ const AddNewPaletteModal = () => {
   const [selectedColors, setSelectedColors] = useState([]);
 
   const updateSelectedColors = useCallback((switchIsEnabled, color) => {
-    setSelectedColors((oldState) => {
-      let state = oldState.slice();
-      if (switchIsEnabled) {
-        state.push(color);
-      } else {
-        state = state.filter((aColor) => aColor.hexCode !== color.hexCode);
-      }
-      return state;
-    });
+    setSelectedColors((oldState) =>
+      switchIsEnabled
+        ? Array.from(oldState).concat(color)
+        : oldState.filter((aColor) => aColor.colorName !== color.colorName),
+    );
   }, []);
 
   const renderItem = ({item}) => {
