@@ -1,13 +1,13 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Switch, Text, View} from 'react-native';
 
-const ColorSwitch = ({color, parentCallback}) => {
+const ColorSwitch = ({color, updateSelectedColors}) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((state) => !state);
 
   useEffect(() => {
-    parentCallback(isEnabled, color);
-  }, [isEnabled, color, parentCallback]);
+    updateSelectedColors(isEnabled, color);
+  }, [isEnabled, color, updateSelectedColors]);
 
   return (
     <Switch
@@ -20,43 +20,23 @@ const ColorSwitch = ({color, parentCallback}) => {
 
 const AddNewPaletteModal = () => {
   const [selectedColors, setSelectedColors] = useState([]);
-  const selectColor = (selectedColor) => {
-    setSelectedColors((initColors) => {
-      console.log('select', initColors);
-      const updatedColors = initColors.slice(0);
-      updatedColors.push(selectedColor);
-      console.log('select', initColors, updatedColors);
-      return updatedColors;
-    });
-  };
-  const deselectColor = (deselectedColor) => {
-    setSelectedColors((colors) => {
-      console.log('deselect', colors);
-      const updatedState = colors.filter((color) => {
-        console.log(deselectedColor, color, color !== deselectedColor);
-        return color !== deselectedColor;
-      });
-      console.log(colors);
-      return updatedState;
-    });
-  };
 
-  const parentCallback = (switchIsEnabled, color) => {
-    console.log('parentCallback', switchIsEnabled);
-    if (switchIsEnabled) {
-      selectColor(color);
-    } else {
-      deselectColor(color);
-    }
-  };
-
-  const wrappedParentCallback = useCallback(parentCallback, []);
+  const updateSelectedColors = useCallback((switchIsEnabled, color) => {
+    setSelectedColors((oldState) => {
+      const state = oldState.slice();
+      if (switchIsEnabled) {
+        state.push(color);
+      } else {
+        state.filter((aColor) => aColor.hexCode !== color.hexCode);
+      }
+    });
+  }, []);
 
   const renderItem = ({item}) => {
     return (
       <View style={styles.cell}>
         <Text style={styles.cellText}>{item.colorName}</Text>
-        <ColorSwitch color={item} parentCallback={wrappedParentCallback} />
+        <ColorSwitch color={item} updateSelectedColors={updateSelectedColors} />
       </View>
     );
   };
