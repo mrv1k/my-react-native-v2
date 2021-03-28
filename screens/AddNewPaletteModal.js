@@ -19,84 +19,64 @@ const ColorSwitch = ({color, updateSelectedColors}) => {
     updateSelectedColors(isEnabled, color);
   }, [isEnabled, updateSelectedColors, color]);
 
-  return (
-    <Switch
-      style={styles.cellSwitch}
-      value={isEnabled}
-      onValueChange={toggleSwitch}
-    />
-  );
+  return <Switch value={isEnabled} onValueChange={toggleSwitch} />;
 };
 
 export default function AddNewPaletteModal({navigation, route}) {
-  const [paletteName, setPaletteName] = useState('');
+  const [name, setName] = useState('');
   const [selectedColors, setSelectedColors] = useState([]);
 
   const updateSelectedColors = useCallback((switchIsEnabled, color) => {
     setSelectedColors((oldState) =>
       switchIsEnabled
-        ? Array.from(oldState).concat(color)
+        ? oldState.concat(color)
         : oldState.filter((aColor) => aColor.colorName !== color.colorName),
     );
   }, []);
 
-  const handleSubmitPress = () => {
-    if (paletteName.length === 0) {
-      return Alert.alert(
-        'Missing palette name',
-        'Please name your palette before submitting.',
-      );
+  const handleSubmit = useCallback(() => {
+    if (name.length === 0) {
+      return Alert.alert('Please enter palette name');
     }
     if (selectedColors.length < 3) {
-      return Alert.alert(
-        'Not enough colors',
-        'A palette requires at minimum 3 colors',
-      );
+      return Alert.alert('A palette requires at minimum 3 colors');
     }
 
-    const newPalette = {id: paletteName, paletteName, colors: selectedColors};
+    const newPalette = {id: name, paletteName: name, colors: selectedColors};
     navigation.navigate('Home', {newPalette});
-  };
+  }, [name, selectedColors, navigation]);
 
   const renderItem = ({item}) => {
     return (
       <View style={styles.cell}>
-        <Text style={styles.cellText}>{item.colorName}</Text>
+        <Text>{item.colorName}</Text>
         <ColorSwitch color={item} updateSelectedColors={updateSelectedColors} />
       </View>
     );
   };
 
   return (
-    <View style={styles.global}>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text>Name of your color palette</Text>
+        <TextInput value={name} onChangeText={setName} style={styles.input} />
+      </View>
       <FlatList
         data={COLORS}
         renderItem={renderItem}
         keyExtractor={(item) => item.colorName}
         ItemSeparatorComponent={() => <View style={styles.cellSeparator} />}
-        ListHeaderComponent={
-          <View style={styles.header}>
-            <Text>Name of your color palette</Text>
-            <TextInput
-              value={paletteName}
-              onChangeText={setPaletteName}
-              style={styles.input}
-            />
-          </View>
-        }
-        ListFooterComponent={
-          <TouchableOpacity onPress={handleSubmitPress} style={styles.button}>
-            <Text style={styles.buttonText}>Submit!</Text>
-          </TouchableOpacity>
-        }
       />
+      <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+        <Text style={styles.buttonText}>Submit!</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const grayColor = 'rgb(196, 197, 197)';
 const styles = StyleSheet.create({
-  global: {paddingHorizontal: 10, backgroundColor: '#fff'},
+  container: {paddingHorizontal: 10, backgroundColor: '#fff', flex: 1},
   header: {paddingVertical: 10},
   input: {
     marginVertical: 10,
@@ -108,20 +88,19 @@ const styles = StyleSheet.create({
   },
   cell: {
     flexDirection: 'row',
-    alignContent: 'space-between',
-    paddingVertical: 5,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
   },
-  cellText: {flex: 1, marginLeft: 10},
-  cellSwitch: {alignSelf: 'flex-end', marginRight: 10},
   cellSeparator: {height: 1, backgroundColor: grayColor},
   button: {
-    backgroundColor: '#78C5EF',
+    backgroundColor: 'teal',
     borderRadius: 5,
-    padding: 15,
-    textAlignVertical: 'center',
     marginVertical: 20,
+
+    height: 40,
+    justifyContent: 'center',
   },
   buttonText: {
     color: 'white',

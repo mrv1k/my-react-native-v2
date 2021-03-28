@@ -6,18 +6,18 @@ const Home = ({navigation, route}) => {
   const [colorPalets, setColorPalets] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  const newPalette = route.params?.newPalette;
   useEffect(() => {
-    if (route.params?.newPalette) {
-      let {newPalette} = route.params;
+    if (newPalette) {
       // prevents duplicate insertions of the same pallets on routes navigation
       const firstPaletteName = colorPalets[0]?.paletteName || '';
       if (firstPaletteName !== newPalette.paletteName) {
         setColorPalets((prevState) => {
-          return [route.params.newPalette].concat(prevState);
+          return [newPalette].concat(prevState);
         });
       }
     }
-  }, [route]);
+  }, [newPalette, colorPalets]);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -68,11 +68,9 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 50,
-    backgroundColor: 'white',
-    padding: 10,
   },
   buttonText: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
     color: 'teal',
   },
