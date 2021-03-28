@@ -12,10 +12,7 @@ const Home = ({navigation}) => {
     setIsRefreshing(false);
   };
 
-  // https://color-palette-api.kadikraman.now.sh/palettes
-  useEffect(() => {
-    fetchColorPallets();
-  }, []);
+  useEffect(() => fetchColorPallets(), []);
 
   const fetchColorPallets = async () => {
     const url = 'https://color-palette-api.kadikraman.now.sh/palettes';

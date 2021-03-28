@@ -1,10 +1,11 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import Home from './screens/Home';
 import ColorPalette from './screens/ColorPalette';
-import {createStackNavigator} from '@react-navigation/stack';
 import AddNewPaletteModal from './screens/AddNewPaletteModal';
+
 const RootStack = createStackNavigator();
 const MainStack = createStackNavigator();
 
@@ -19,7 +20,7 @@ const MainStackScreen = () => (
   </MainStack.Navigator>
 );
 
-const App = () => {
+export default function App() {
   return (
     <NavigationContainer>
       <RootStack.Navigator mode="modal">
@@ -32,6 +33,4 @@ const App = () => {
       </RootStack.Navigator>
     </NavigationContainer>
   );
-};
-
-export default App;
+}

@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
+  Alert,
   FlatList,
   StyleSheet,
   Switch,
@@ -39,6 +40,21 @@ export default function AddNewPaletteModal() {
     );
   }, []);
 
+  const handleSubmitPress = useCallback(() => {
+    if (paletteName.length === 0) {
+      return Alert.alert(
+        'Missing palette name',
+        'Please name your palette before submitting.',
+      );
+    }
+    if (selectedColors.length < 3) {
+      return Alert.alert(
+        'Not enough colors',
+        'A palette requires at minimum 3 colors',
+      );
+    }
+  }, [paletteName, selectedColors]);
+
   const renderItem = ({item}) => {
     return (
       <View style={styles.cell}>
@@ -66,7 +82,7 @@ export default function AddNewPaletteModal() {
           </View>
         }
         ListFooterComponent={
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity onPress={handleSubmitPress} style={styles.button}>
             <Text style={styles.buttonText}>Submit!</Text>
           </TouchableOpacity>
         }
@@ -115,7 +131,7 @@ const styles = StyleSheet.create({
 // [x] pressing on "add color scheme" opens a modal
 // [x] the user can enter the name for the color scheme
 // [x] the user can use toggle buttons to select colors to add to the scheme
-// [] if the user hits submit without entering a name for the color, they will get an error message
-// [] if the user hits submit without entering the number of colors, they will get an error message
+// [x] if the user hits submit without entering a name for the color, they will get an error message
+// [x] if the user hits submit without entering the number of colors, they will get an error message
 // [] if the user has entered a name for the color scheme and picked at least 3 colors,
 // ^ the modal will close and the color scheme they created gets added to the top of the list
