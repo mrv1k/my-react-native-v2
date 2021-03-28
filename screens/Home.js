@@ -2,9 +2,22 @@ import React, {useState, useEffect} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import PalettePreview from '../components/PalettePreview';
 
-const Home = ({navigation}) => {
+const Home = ({navigation, route}) => {
   const [colorPalets, setColorPalets] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  useEffect(() => {
+    if (route.params?.newPalette) {
+      let {newPalette} = route.params;
+      // prevents duplicate insertions of the same pallets on routes navigation
+      const firstPaletteName = colorPalets[0]?.paletteName || '';
+      if (firstPaletteName !== newPalette.paletteName) {
+        setColorPalets((prevState) => {
+          return [route.params.newPalette].concat(prevState);
+        });
+      }
+    }
+  }, [route]);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -40,7 +53,7 @@ const Home = ({navigation}) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('AddNewPalette')}>
-          <Text style={styles.buttonText}>modal</Text>
+          <Text style={styles.buttonText}>Add color scheme</Text>
         </TouchableOpacity>
       }
     />

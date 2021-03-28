@@ -28,7 +28,7 @@ const ColorSwitch = ({color, updateSelectedColors}) => {
   );
 };
 
-export default function AddNewPaletteModal() {
+export default function AddNewPaletteModal({navigation, route}) {
   const [paletteName, setPaletteName] = useState('');
   const [selectedColors, setSelectedColors] = useState([]);
 
@@ -40,7 +40,7 @@ export default function AddNewPaletteModal() {
     );
   }, []);
 
-  const handleSubmitPress = useCallback(() => {
+  const handleSubmitPress = () => {
     if (paletteName.length === 0) {
       return Alert.alert(
         'Missing palette name',
@@ -53,7 +53,10 @@ export default function AddNewPaletteModal() {
         'A palette requires at minimum 3 colors',
       );
     }
-  }, [paletteName, selectedColors]);
+
+    const newPalette = {id: paletteName, paletteName, colors: selectedColors};
+    navigation.navigate('Home', {newPalette});
+  };
 
   const renderItem = ({item}) => {
     return (
@@ -133,5 +136,5 @@ const styles = StyleSheet.create({
 // [x] the user can use toggle buttons to select colors to add to the scheme
 // [x] if the user hits submit without entering a name for the color, they will get an error message
 // [x] if the user hits submit without entering the number of colors, they will get an error message
-// [] if the user has entered a name for the color scheme and picked at least 3 colors,
+// [x] if the user has entered a name for the color scheme and picked at least 3 colors,
 // ^ the modal will close and the color scheme they created gets added to the top of the list
