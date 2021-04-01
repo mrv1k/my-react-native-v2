@@ -1,7 +1,10 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-const ColorBox = ({colorName, hexCode}) => {
+const ColorBox: React.FC<{
+  colorName: string;
+  hexCode: string;
+}> = ({colorName, hexCode}) => {
   const background = {backgroundColor: hexCode};
   let textStyle = {
     color:
