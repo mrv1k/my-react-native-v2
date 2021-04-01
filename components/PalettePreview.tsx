@@ -1,6 +1,6 @@
 import React from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Palette} from '../shared/types';
+import {Palette} from '../types';
 
 const PalettePreview: React.FC<{
   handleOnPress: () => {};
