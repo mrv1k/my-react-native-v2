@@ -1,19 +1,10 @@
 import React from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-
-interface Color {
-  colorName: string;
-  hexCode: string;
-}
-interface ColorPalette {
-  paletteName: string;
-  id: number;
-  colors: Color[];
-}
+import {Palette} from '../shared/types';
 
 const PalettePreview: React.FC<{
   handleOnPress: () => {};
-  colorPalette: ColorPalette;
+  colorPalette: Palette;
 }> = ({handleOnPress, colorPalette}) => {
   return (
     <TouchableOpacity onPress={handleOnPress}>
