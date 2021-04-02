@@ -5,23 +5,10 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Home from './screens/Home';
 import ColorPalette from './screens/ColorPalette';
 import AddNewPaletteModal from './screens/AddNewPaletteModal';
-import {RootStackParamList, MainStackParamList} from './types';
+import {MainStackParamList, RootStackParamList} from './types';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 const MainStack = createStackNavigator<MainStackParamList>();
-
-const MainStackScreen = () => {
-  return (
-    <MainStack.Navigator>
-      <MainStack.Screen name="Home" component={Home} />
-      <MainStack.Screen
-        name="ColorPalette"
-        component={ColorPalette}
-        options={({route: {params}}) => ({title: params.paletteName})}
-      />
-    </MainStack.Navigator>
-  );
-};
 
 export default function App() {
   return (
@@ -37,3 +24,16 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const MainStackScreen = () => {
+  return (
+    <MainStack.Navigator>
+      <MainStack.Screen name="Home" component={Home} />
+      <MainStack.Screen
+        name="ColorPalette"
+        component={ColorPalette}
+        options={({route: {params}}) => ({title: params.paletteName})}
+      />
+    </MainStack.Navigator>
+  );
+};

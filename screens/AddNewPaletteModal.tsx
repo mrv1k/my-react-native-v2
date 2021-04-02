@@ -10,29 +10,26 @@ import {
   View,
 } from 'react-native';
 import COLORS from '../data/colors';
+import {AddNewPaletteNavigationProp, Color, Palette} from '../types';
 
-const ColorSwitch = ({color, updateSelectedColors}) => {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((state) => !state);
+interface AddNewPaletteProps {
+  navigation: AddNewPaletteNavigationProp;
+}
 
-  useEffect(() => {
-    updateSelectedColors(isEnabled, color);
-  }, [isEnabled, updateSelectedColors, color]);
-
-  return <Switch value={isEnabled} onValueChange={toggleSwitch} />;
-};
-
-export default function AddNewPaletteModal({navigation, route}) {
+export default function AddNewPaletteModal({navigation}: AddNewPaletteProps) {
   const [name, setName] = useState('');
-  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedColors, setSelectedColors] = useState<Color[]>([]);
 
-  const updateSelectedColors = useCallback((switchIsEnabled, color) => {
-    setSelectedColors((oldState) =>
-      switchIsEnabled
-        ? oldState.concat(color)
-        : oldState.filter((aColor) => aColor.colorName !== color.colorName),
-    );
-  }, []);
+  const updateSelectedColors = useCallback(
+    (switchIsEnabled: boolean, color: Color) => {
+      setSelectedColors((oldState) =>
+        switchIsEnabled
+          ? oldState.concat(color)
+          : oldState.filter((aColor) => aColor.colorName !== color.colorName),
+      );
+    },
+    [],
+  );
 
   const handleSubmit = useCallback(() => {
     if (name.length === 0) {
@@ -42,11 +39,15 @@ export default function AddNewPaletteModal({navigation, route}) {
       return Alert.alert('A palette requires at minimum 3 colors');
     }
 
-    const newPalette = {id: name, paletteName: name, colors: selectedColors};
+    const newPalette: Palette = {
+      id: -1, // ! FIXME: make a unique number
+      paletteName: name,
+      colors: selectedColors,
+    };
     navigation.navigate('Home', {newPalette});
   }, [name, selectedColors, navigation]);
 
-  const renderItem = ({item}) => {
+  const renderItem = ({item}: {item: Color}) => {
     return (
       <View style={styles.cell}>
         <Text>{item.colorName}</Text>
@@ -73,6 +74,24 @@ export default function AddNewPaletteModal({navigation, route}) {
     </View>
   );
 }
+
+interface ColorSwitchProps {
+  color: Color;
+  updateSelectedColors: (isEnabled: boolean, color: Color) => void;
+}
+const ColorSwitch: React.FC<ColorSwitchProps> = ({
+  color,
+  updateSelectedColors,
+}) => {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled((state) => !state);
+
+  useEffect(() => {
+    updateSelectedColors(isEnabled, color);
+  }, [isEnabled, updateSelectedColors, color]);
+
+  return <Switch value={isEnabled} onValueChange={toggleSwitch} />;
+};
 
 const grayColor = 'rgb(196, 197, 197)';
 const styles = StyleSheet.create({
