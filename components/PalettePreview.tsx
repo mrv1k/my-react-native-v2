@@ -3,7 +3,7 @@ import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Palette} from '../types';
 
 const PalettePreview: React.FC<{
-  handleOnPress: () => {};
+  handleOnPress: () => void;
   colorPalette: Palette;
 }> = ({handleOnPress, colorPalette}) => {
   return (

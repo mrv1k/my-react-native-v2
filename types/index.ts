@@ -24,14 +24,22 @@ export type ColorPaletteRouteProp = RouteProp<
   'ColorPalette'
 >;
 
-// ? Doesn't feel right but works /shrug
+// going up from AddNew modal to Home screen
 export type AddNewPaletteNavigationProp = StackNavigationProp<
   MainStackParamList,
   'Home'
 >;
 
-// import {CompositeNavigationProp} from '@react-navigation/native';
-// export type RootScreenNavigationProp = CompositeNavigationProp<
-//   StackNavigationProp<MainStackParamList, 'Home'>,
-//   StackNavigationProp<AddNewPaletteStackParamList>
-// >;
+export type HomeRouteProp = RouteProp<MainStackParamList, 'Home'>;
+
+type HomeNavigationPropAddNewPalette = StackNavigationProp<
+  RootStackParamList,
+  'AddNewPalette'
+>;
+type HomeNavigationPropColorPalette = StackNavigationProp<
+  MainStackParamList,
+  'ColorPalette'
+>;
+
+export type HomeNavigationProp = HomeNavigationPropAddNewPalette &
+  HomeNavigationPropColorPalette;

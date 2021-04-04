@@ -1,9 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import PalettePreview from '../components/PalettePreview';
+import {HomeNavigationProp, HomeRouteProp, Palette} from '../types';
 
-const Home = ({navigation, route}) => {
-  const [colorPalets, setColorPalets] = useState([]);
+interface Props {
+  navigation: HomeNavigationProp;
+  route: HomeRouteProp;
+}
+
+const Home = ({navigation, route}: Props) => {
+  const [colorPalets, setColorPalets] = useState<Palette[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const newPalette = route.params?.newPalette;
@@ -25,7 +31,9 @@ const Home = ({navigation, route}) => {
     setIsRefreshing(false);
   };
 
-  useEffect(() => fetchColorPallets(), []);
+  useEffect(() => {
+    fetchColorPallets();
+  }, []);
 
   const fetchColorPallets = async () => {
     const url = 'https://color-palette-api.kadikraman.now.sh/palettes';
@@ -34,7 +42,7 @@ const Home = ({navigation, route}) => {
     setColorPalets(json);
   };
 
-  const renderItem = ({item}) => (
+  const renderItem = ({item}: {item: Palette}) => (
     <PalettePreview
       handleOnPress={() => navigation.navigate('ColorPalette', item)}
       colorPalette={item}
