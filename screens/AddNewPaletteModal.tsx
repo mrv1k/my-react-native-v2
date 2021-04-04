@@ -40,7 +40,7 @@ export default function AddNewPaletteModal({navigation}: AddNewPaletteProps) {
     }
 
     const newPalette: Palette = {
-      id: -1, // ! FIXME: make a unique number
+      id: Date.now(),
       paletteName: name,
       colors: selectedColors,
     };
